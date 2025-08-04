@@ -78,6 +78,7 @@ news_fetcher_api/
 
 ---
 
+
 ## 🧪 How to Run & Test
 
 ```bash
@@ -92,13 +93,16 @@ python db.py
 
 
 ⚠️ Known Limitations
+
 🔌 Manual button click required for fetching new news
 
 🌐 API quota is limited per day (free tier)
 
 🔐 API key stored in .env file (excluded from Git)
 
+
 🗺️ Future Improvements
+
 ✅ Add streamlit form to unify Enter and button triggers
 
 ✅ Add category-based filtering or keyword dropdown
@@ -110,4 +114,5 @@ python db.py
 ✅ Deploy on Streamlit Cloud or HuggingFace Spaces
 
 ✅ Add user analytics or session tracking
+
 
