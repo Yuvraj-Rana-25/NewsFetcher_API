@@ -48,7 +48,7 @@ def save_to_db(headlines, topic):
         try:
             title = article.get('title')
             description = article.get('description')
-            source = article.get('source_id')  # adjust if your key is different
+            source = article.get('source_id')  # adjust if key is different in future api structure
             publishedAt = article.get('pubDate')  # ISO string format
             url = article.get('link')
 
@@ -66,3 +66,26 @@ def save_to_db(headlines, topic):
     conn.close()
     print(" Headlines inserted into database.")
 
+# here we fetch recent headlines from the database about mentioned topic
+def get_recent_headlines(limit=5, topic=None):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    if topic:
+        cursor.execute("""
+            SELECT * FROM headlines
+            WHERE topic = %s
+            ORDER BY publishedAt DESC
+            LIMIT %s
+        """, (topic, limit))
+    else:
+        cursor.execute("""
+            SELECT * FROM headlines
+            ORDER BY publishedAt DESC
+            LIMIT %s
+        """, (limit,))
+
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return results

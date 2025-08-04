@@ -50,5 +50,7 @@ if __name__ == '__main__':
 # 5. Save headlines to database
 from db import save_to_db
 
-headlines = fetch_headlines(topic)
-save_to_db(headlines, topic)
+if __name__ == '__main__':
+    topic = input("Enter a topic to search for news: ").strip()
+    headlines = fetch_headlines(topic)
+    save_to_db(headlines, topic)

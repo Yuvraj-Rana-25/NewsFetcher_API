@@ -1,61 +1,108 @@
-# 📰 News Headline Fetcher (using NewsData.io API)
+# 📰 NewsPulse — Live + Stored News Fetcher App
 
-This Python project fetches and stores the latest news headlines based on a user-specified topic. It uses the NewsData.io API and demonstrates key practices in API integration, modular Python scripting, file handling, and secure key management.
+**NewsPulse** is a modular Python application that fetches real-time news using the NewsData.io API, stores the data in a MySQL database, and displays both live and stored headlines in a clean, interactive Streamlit web interface.
+
+This project serves as a foundational step toward building full-stack data-driven applications with end-to-end functionality — from API integration to GUI-based output.
+
+---
+
+## 🚀 Features
+
+- 🔍 Fetch live news headlines by topic
+- 💾 Save results in a MySQL database
+- 📂 Store offline JSON backups (optional)
+- 🧠 Retrieve and display recent news from database
+- 🖥️ Interactive GUI using Streamlit
+- 🔒 Secure API keys with dotenv
+- 📌 Full Git-based version control
+
+---
+
+## 🛠️ Technologies Used
+
+| Layer          | Tools/Technologies         |
+|----------------|----------------------------|
+| **Frontend**   | Streamlit                  |
+| **Backend**    | Python, requests, dotenv   |
+| **Database**   | MySQL                      |
+| **Versioning** | Git & GitHub               |
 
 ---
 
 ## 📁 Project Structure
 
-- `main.py`: Core Python script that handles the API request, data processing, and saving headlines.
-- `headlines.json`: Output file that stores all fetched headlines in structured JSON format.
-- `.env`: Stores the API key securely (excluded from version control).
-- `.gitignore`: Prevents sensitive files like `.env` from being committed to Git.
-- `README.md`: Documentation for the project and learning summary.
+news_fetcher_api/
+├── app.py ← Streamlit GUI app
+├── main.py ← Fetch & process live news from API
+├── db.py ← Save/retrieve news from MySQL database
+├── headlines.json ← Optional JSON backup of fetched news
+├── .env ← API key (excluded from Git)
+├── .gitignore ← Ignore .env, pycache, *.pyc, etc.
+└── README.md ← This file
+
 
 ---
 
-## 🧠 What I Learned
+## ⚙️ How It Works
 
-### ✅ Environment Setup & Git
-- Connected VS Code with GitHub to manage version control directly.
-- Created a new repository specifically for this project.
-- Used a `.gitignore` file to exclude sensitive files like `.env`.
+### 🧩 Modular Components
 
-### ✅ API Key Handling
-- Stored the API key securely in a `.env` file.
-- Loaded it into the script using `python-dotenv` and `os.getenv()` to avoid hardcoding secrets.
+1. `main.py`
+   - Contains `fetch_headlines()` to call NewsData.io API
+   - Includes `save_to_json()` to optionally back up data offline
+   - Protected with `if __name__ == "__main__"` for safe testing
 
-### ✅ Script Logic
-- Imported necessary modules: `os`, `requests`, `json`, and `dotenv`.
-- Defined two modular functions:
-  - `fetch_headlines(topic, language, country)`: Makes a GET request to NewsData API and parses the JSON response.
-  - `save_to_json(headlines)`: Saves the list of fetched articles to a local `.json` file in UTF-8 encoding.
-- Used basic error handling to check if the API call was successful (`status_code == 200`).
-- Used `if __name__ == "__main__"` to ensure the script only runs when executed directly.
-- Prompted the user for a topic, fetched relevant headlines, and displayed the top 5 results.
+2. `db.py`
+   - Contains `save_to_db()` to write fetched news into MySQL
+   - Contains `get_recent_headlines()` to read from DB by topic
 
----
-
-## 🚀 Technologies Used
-
-- Python 3
-- [NewsData.io API](https://newsdata.io/)
-- `requests` – to make API calls
-- `json` – for handling structured data
-- `dotenv` – for environment variable management
-- VS Code + Git + GitHub – for code editing and version control
+3. `app.py`
+   - Streamlit GUI
+   - Text input for news topic
+   - "Fetch Live News" button → fetch + save new data
+   - Displays latest headlines from MySQL database
 
 ---
 
-## 📌 Next Steps / Ideas to Expand
-- Add keyword-based filtering within the fetched headlines.
-- Let user choose between saving `.json` or `.txt` format.
-- Create a Streamlit dashboard to display news interactively.
-- Filter by country or language dynamically via user input.
+## 💡 Current Behavior & UX Notes
+
+- ✅ GUI allows entering a topic and fetching news manually
+- ❌ **Pressing Enter** in the topic field **only updates stored results**, not live API fetch
+- 🧠 This avoids excessive API calls during development/testing
+- 📌 **TODO**: Combine Enter key and fetch button behavior using Streamlit Forms
 
 ---
 
-## 🙌 Personal Note
+## 🧪 How to Run & Test
 
-This project helped me go beyond tutorials — I now understand how real-world APIs interact with Python scripts, how to handle data safely and modularly, and how to manage code cleanly through Git and GitHub. It's my first structured step toward becoming a data product builder.
+```bash
+# 1. Run the GUI app
+streamlit run app.py
+
+# 2. Run API logic only (for testing)
+python main.py
+
+# 3. Run database storage module (to confirm DB connection)
+python db.py
+
+
+⚠️ Known Limitations
+🔌 Manual button click required for fetching new news
+
+🌐 API quota is limited per day (free tier)
+
+🔐 API key stored in .env file (excluded from Git)
+
+🗺️ Future Improvements
+✅ Add streamlit form to unify Enter and button triggers
+
+✅ Add category-based filtering or keyword dropdown
+
+✅ Improve DB schema for multiple categories, timestamps, etc.
+
+✅ Export results to CSV/PDF
+
+✅ Deploy on Streamlit Cloud or HuggingFace Spaces
+
+✅ Add user analytics or session tracking
 
