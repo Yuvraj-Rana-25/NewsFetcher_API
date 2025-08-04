@@ -32,13 +32,13 @@ This project serves as a foundational step toward building full-stack data-drive
 ## 📁 Project Structure
 
 news_fetcher_api/
-├── app.py ← Streamlit GUI app
-├── main.py ← Fetch & process live news from API
-├── db.py ← Save/retrieve news from MySQL database
-├── headlines.json ← Optional JSON backup of fetched news
-├── .env ← API key (excluded from Git)
-├── .gitignore ← Ignore .env, pycache, *.pyc, etc.
-└── README.md ← This file
+    app.py ← Streamlit GUI app
+    main.py ← Fetch & process live news from API
+    db.py ← Save/retrieve news from MySQL database
+    headlines.json ← Optional JSON backup of fetched news
+    .env ← API key (excluded from Git)
+    .gitignore ← Ignore .env, pycache, *.pyc, etc.
+    README.md ← This file
 
 
 ---
