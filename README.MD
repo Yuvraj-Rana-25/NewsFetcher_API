@@ -81,7 +81,7 @@ news_fetcher_api/
 
 ## 🧪 How to Run & Test
 
-```bash
+
 # 1. Run the GUI app
 streamlit run app.py
 
