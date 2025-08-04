@@ -81,15 +81,10 @@ news_fetcher_api/
 
 ## 🧪 How to Run & Test
 
+- **Run the GUI app**: `streamlit run app.py`
+- **Run the API logic for testing**: `python main.py`
+- **Run the database module to verify DB connection**: `python db.py`
 
-# 1. Run the GUI app
-streamlit run app.py
-
-# 2. Run API logic only (for testing)
-python main.py
-
-# 3. Run database storage module (to confirm DB connection)
-python db.py
 
 
 ⚠️ Known Limitations
