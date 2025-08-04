@@ -46,3 +46,9 @@ if __name__ == '__main__':
             print(f"{i}. {article['title']}")
 
         save_to_json(headlines)
+
+# 5. Save headlines to database
+from db import save_to_db
+
+headlines = fetch_headlines(topic)
+save_to_db(headlines, topic)
