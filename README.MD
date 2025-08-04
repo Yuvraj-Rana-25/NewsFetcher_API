@@ -33,6 +33,7 @@ This project serves as a foundational step toward building full-stack data-drive
 ## 📁 Project Structure
 
 
+
 news_fetcher_api/
 ├── app.py            ← Streamlit GUI app
 ├── main.py           ← Fetch & process live news from API
@@ -41,6 +42,7 @@ news_fetcher_api/
 ├── .env              ← API key (excluded from Git)
 ├── .gitignore        ← Ignore .env, __pycache__, *.pyc, etc.
 └── README.md         ← This file
+
 
 
 
