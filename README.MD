@@ -87,7 +87,7 @@ news_fetcher_api/
 
 
 
-⚠️ Known Limitations
+##⚠️ Known Limitations
 
 🔌 Manual button click required for fetching new news
 
@@ -96,7 +96,7 @@ news_fetcher_api/
 🔐 API key stored in .env file (excluded from Git)
 
 
-🗺️ Future Improvements
+##🗺️ Future Improvements
 
 ✅ Add streamlit form to unify Enter and button triggers
 
