@@ -36,35 +36,44 @@ if __name__ == "__main__":
 
 # here we save the headlines to the database
 def save_to_db(headlines, topic):
-    conn = get_connection()
-    cursor = conn.cursor()
+    connection = get_connection()
+    cursor = connection.cursor()
 
     insert_query = """
-        INSERT INTO headlines (title, description, source, publishedAt, url, topic)
-        VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO headlines (title, description, source_id, publishedAt, url, topic, category)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
+
+    check_query = "SELECT COUNT(*) FROM headlines WHERE url = %s"
 
     for article in headlines:
         try:
             title = article.get('title')
             description = article.get('description')
-            source = article.get('source_id')  # adjust if key is different in future api structure
-            publishedAt = article.get('pubDate')  # ISO string format
+            source = article.get('source_id')
+            publishedAt = article.get('pubDate')
             url = article.get('link')
+            category = article.get('category', 'general')  # fallback
 
-            # Check for missing fields or bad data
             if not title or not url:
                 continue
 
-            cursor.execute(insert_query, (title, description, source, publishedAt, url, topic))
+            # ✅ Check for duplicate
+            cursor.execute(check_query, (url,))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                continue  # Skip inserting if already exists
+
+            cursor.execute(insert_query, (title, description, source, publishedAt, url, topic, category))
 
         except Exception as e:
-            print(" Error inserting article:", e)
+            print("❌ Error inserting article:", e)
 
-    conn.commit()
+    connection.commit()
     cursor.close()
-    conn.close()
-    print(" Headlines inserted into database.")
+    connection.close()
+    print("✅ Data saved to MySQL successfully.")
+
 
 # here we fetch recent headlines from the database about mentioned topic
 def get_recent_headlines(limit=5, topic=None):
