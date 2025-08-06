@@ -40,7 +40,7 @@ def save_to_db(headlines, topic):
     cursor = connection.cursor()
 
     insert_query = """
-    INSERT INTO headlines (title, description, source_id, publishedAt, url, topic, category)
+    INSERT INTO headlines (title, description, source, publishedAt, url, topic, category)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
 
@@ -50,11 +50,16 @@ def save_to_db(headlines, topic):
         try:
             title = article.get('title')
             description = article.get('description')
-            source = article.get('source_id')
+            source = article.get('source')
             publishedAt = article.get('pubDate')
             url = article.get('link')
             category = article.get('category', 'general')  # fallback
 
+            if isinstance(source, list):
+                source = ", ".join(source)
+
+            if isinstance(category, list):
+                category = ", ".join(category)          
             if not title or not url:
                 continue
 

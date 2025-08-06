@@ -36,57 +36,106 @@ st.markdown("""
             background-color: #0052a3;
             color: white;
         }
+       /* Set default cursor to arrow for everything */
+        * {
+            cursor: default !important;
+        }
+
+        /* Ensure entire button (including text) shows pointer */
+        button, button * {
+            cursor: pointer !important;
+        }
+
+        /* Ensure links styled as "Read Full Article" also show pointer */
+        a, a * {
+            cursor: pointer !important;
+        }
+
+        /* Search bar text input gets text (I-beam) cursor */
+        input[type="text"] {
+            cursor: text !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
+
+# Ensure session state has key
+if "active_category" not in st.session_state:
+    st.session_state["active_category"] = None
+
+
 # Search box
 st.markdown("## 🔍 Search for Live News")
-topic = st.text_input("Enter a topic to search:", placeholder="e.g. elections, Apple, cricket...")
 
-if st.button("🔎 Fetch Live News"):
-    if topic:
-        with st.spinner("Fetching latest headlines..."):
-            headlines = fetch_headlines(topic)
-            if headlines:
-                save_to_json(headlines)
-                save_to_db(headlines, topic)
-                st.success("✅ Headlines fetched and saved successfully!")
-            else:
-                st.warning("⚠️ No headlines found for that topic.")
-    else:
-        st.warning("❗ Please enter a topic to search.")
+
+with st.form("search_form", clear_on_submit=True):
+    topic = st.text_input("Enter a topic to fetch related news", value="", key="topic_input")
+    st.markdown("""
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputBox = document.querySelector('input[type="text"]');
+            
+            // Blur on scroll
+            window.addEventListener('scroll', () => {
+                if (inputBox === document.activeElement) {
+                    inputBox.blur();
+                }
+            });
+
+            // Blur when clicking outside the input
+            document.addEventListener('click', function (event) {
+                if (inputBox && !inputBox.contains(event.target)) {
+                    inputBox.blur();
+                }
+            });
+
+            // Blur on enter key press
+            if (inputBox) {
+                inputBox.addEventListener('keydown', function (e) {
+                    if (e.key === "Enter") {
+                        inputBox.blur();
+                    }
+                });
+            }
+        });
+        </script>
+    """, unsafe_allow_html=True)
+    submitted = st.form_submit_button("Fetch News")
+
+if submitted and topic:
+    with st.spinner("Fetching news..."):
+        headlines = fetch_headlines(topic)
+        save_to_json(headlines)
+        save_to_db(headlines, topic)
+        st.success("News fetched and stored successfully!")
+
+        # Show the fetched headlines immediately
+        if headlines:
+            st.markdown(f"### 🗞️ Latest headlines about **{topic.capitalize()}**:")
+            for article in headlines[:10]:
+                st.markdown(f"**{article.get('title')}**")
+                st.markdown(f"[Read full article]({article.get('url')})", unsafe_allow_html=True)
+                st.markdown("---")
+
 
 
 
 # Browse by category
 
-st.markdown("### 📂 Browse Top News by Category")
-
-# Dropdown selector for category
-selected_category = st.selectbox(
-    "Select a news category",
-    options=list(CATEGORY_KEYWORDS.keys()),
-    index=0  # Default to "top" category
-)
-
-# Show news for selected category
-df = get_category_view(selected_category)
-
-if df.empty:
-    st.warning("No news available for this category.")
-else:
-    st.success(f"Top {selected_category.capitalize()} Headlines:")
-    for _, row in df.iterrows():
-        st.subheader(row["title"])
-        st.markdown(f"**Source:** {row['source']}  \n📅 *{row['publishedAt']}*")
-        st.markdown(f"[Read full article]({row['url']})", unsafe_allow_html=True)
-        st.markdown("---")
 
 
+# Sidebar Categories
+st.sidebar.markdown("### 🗂️ Categories")
+CATEGORIES = [cat for cat in CATEGORY_KEYWORDS.keys() if cat.lower() != "top"]
 
-
-
-st.markdown("---")
+# Show all buttons in sidebar as rows
+for category in CATEGORIES:
+    if st.sidebar.button(category.capitalize()):
+        # If the same category is clicked again, deselect it
+        if st.session_state.get("active_category") == category:
+            st.session_state["active_category"] = None
+        else:
+            st.session_state["active_category"] = category
 
 
 
@@ -104,5 +153,5 @@ else:
 
 
 # Footer
-st.markdown("---")
+
 st.markdown("<center><small>Crafted with ❤️ by Yuvraj Rana · Powered by NewsData.io API</small></center>", unsafe_allow_html=True)
