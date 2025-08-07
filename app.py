@@ -114,7 +114,7 @@ if submitted and topic:
             st.markdown(f"### 🗞️ Latest headlines about **{topic.capitalize()}**:")
             for article in headlines[:10]:
                 st.markdown(f"**{article.get('title')}**")
-                st.markdown(f"[Read full article]({article.get('url')})", unsafe_allow_html=True)
+                st.markdown(f"[Read full article]({article.get('link')})", unsafe_allow_html=True)
                 st.markdown("---")
 
 
@@ -136,7 +136,14 @@ for category in CATEGORIES:
             st.session_state["active_category"] = None
         else:
             st.session_state["active_category"] = category
-
+            category_headlines = get_category_view(category)
+            if not category_headlines.empty:
+                st.markdown(f"### 🗞️ Latest headlines about **{category.capitalize()}**:")
+                for index, row in category_headlines.iterrows():
+                    st.subheader(row["title"])
+                    st.markdown(f"**Source:** {row['source']}  \n📅 *{row['publishedAt']}*")
+                    st.markdown(f"[Read full article]({row['url']})", unsafe_allow_html=True)
+                    st.markdown("---")
 
 
 # Recently fetched headlines
